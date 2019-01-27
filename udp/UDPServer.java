@@ -47,7 +47,20 @@ public class UDPServer {
 
 	public UDPServer(int rp) {
 		// TO-DO: Initialise UDP socket for receiving data
-
+		public static void main(String args[]){
+			DatagramSocket aSocket =null;
+			try{
+				aSocket =new DatagramSocket(6789);
+				byte[]buffer =new byte[1000];
+				while(true){
+					DatagramPacket request =new DatagramPacket(buffer, buffer.length);
+					aSocket.receive(request);
+					DatagramPacket reply = new DatagramPacket(request.getData(),request.getLengh(),request.getAddress(),request.getPort());
+					aSocket.send(reply);
+				}
+			}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
+			}catch(IOException e){System.out.println("IO:"+e.getMessage());
+			}}
 		// Done Initialisation
 		System.out.println("UDPServer ready");
 	}

@@ -25,7 +25,7 @@ public class RMIClient {
 		int numMessages = Integer.parseInt(args[1]);
 
 		// TO-DO: Initialise Security Manager
-
+		System.setSecurityManager(new RMIsecurityManager());
 		// TO-DO: Bind to RMIServer
 
 		// TO-DO: Attempt to send messages the specified number of times
