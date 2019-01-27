@@ -47,25 +47,30 @@ public class UDPServer {
 
 	public UDPServer(int rp) {
 		// TO-DO: Initialise UDP socket for receiving data
-		public static void main(String args[]){
-			DatagramSocket aSocket =null;
-			try{
-				aSocket =new DatagramSocket(6789);
-				byte[]buffer =new byte[1000];
-				while(true){
-					DatagramPacket request =new DatagramPacket(buffer, buffer.length);
-					aSocket.receive(request);
-					DatagramPacket reply = new DatagramPacket(request.getData(),request.getLengh(),request.getAddress(),request.getPort());
-					aSocket.send(reply);
-				}
-			}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
-			}catch(IOException e){System.out.println("IO:"+e.getMessage());
-			}}
+		// public static void main(String args[]){
+		// 	DatagramSocket aSocket =null;
+		// 	try{
+		// 		aSocket =new DatagramSocket(6789);
+		// 		byte[]buffer =nemainw byte[1000];
+		// 		while(true){
+		// 			DatagramPacket request =new DatagramPacket(buffer, buffer.length);
+		// 			aSocket.receive(request);
+		// 			DatagramPacket reply = new DatagramPacket(request.getData(),request.getLengh(),request.getAddress(),request.getPort());
+		// 			aSocket.mainsend(reply);
+		// 		}
+		// 	}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
+		// 	}catch(IOException e){System.out.println("IO:"+e.getMessage());
+		// 	}}
 		// Done Initialisation
+		if rp =
 		System.out.println("UDPServer ready");
 	}
 
 	public static void main(String args[]) {
+		int	recvPort;
+
+		// Get the parameters from command line
+		if (args.length < 1) {public static void main(String args[]) {
 		int	recvPort;
 
 		// Get the parameters from command line
@@ -74,7 +79,17 @@ public class UDPServer {
 			System.exit(-1);
 		}
 		recvPort = Integer.parseInt(args[0]);
+		UDPServer server = new UDPServer(recvPort);
+			System.err.println("Arguments required: recv port");
+			System.exit(-1);		// TO-DO: On receipt of first message, initialise the receive buffer
 
+		// TO-DO: Log receipt of the message
+
+		// TO-DO: If this is the last expected message, then identify
+		}
+		recvPort = Integer.parseInt(args[0]);
+		UDPServer server = new UDPServer(recvPort);
+		server.run();
 		// TO-DO: Construct Server object and start it by calling run().
 	}
 

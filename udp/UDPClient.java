@@ -9,7 +9,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
+import java.nio.charset.StandardCharsets;
 import common.MessageInfo;
 
 public class UDPClient {
@@ -21,7 +21,20 @@ public class UDPClient {
 		int			recvPort;
 		int 		countTo;
 		String 		message;
-
+	// 	DatagramSocket aSocket=null;
+	//	try{aSocket=new DatagramSocket();
+	// 				byte[ ]m=args[0].getBytes();
+	// 				InetAddress aHost = InetAddress.getByName(args[1]);
+	// 				int serverPort =6789;
+	// 				DatagramPacket request = new DatagramPacket(m,args[0].length,aHost,serverPort);
+	// 				aSocket.send(request);
+	// 				byte[]buffer = new byte[1000];
+	// 				DatagramPacket reply =new DatagramPacket(buffer,buffer.length);
+	// 				aSocket.receive(reply);
+	// 				System.out.println("Reply:"+new String(reply.getData()));
+	// 		}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
+	// 	}catch(IOException e){System.out.println("IO:"+e.getMessage());
+	// }
 		// Get the parameters
 		if (args.length < 3) {
 			System.err.println("Arguments required: server name/IP, recv port, message count");
@@ -36,41 +49,37 @@ public class UDPClient {
 		}
 		recvPort = Integer.parseInt(args[1]);
 		countTo = Integer.parseInt(args[2]);
-
-
+		UDPClient client=new UDPClient();
+		client.testLoop(serverAddr,recvPort,countTo);
 		// TO-DO: Construct UDP client class and try to send messages
 	}
 
 	public UDPClient() {
-		public static void main(string args[]){
-			DatagramSocket aSocket=null;
-			try{aSocket=new DatagramSocket();
-					byte[ ]m=args[0].getBytes();
-					InetAddress aHost = InetAddress.getByName(args[1]);
-					int serverPort =6789;
-					DatagramPacket request = new DatagramPacket(m,args[0].length,aHost,serverPort);
-					aSocket.send(request);
-					byte[]buffer = new byte[1000];
-					DatagramPacket reply =new DatagramPacket(buffer,buffer.length);
-					aSocket.receive(reply);
-					System.out.println("Reply:"+new String(reply.getData()));
-			}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
-		}catch(IOException e){System.out.println("IO:"+e.getMessage());
-	}}
+		try{DatagramSocket aSocket = new DatagramSocket();
+		}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
 		// TO-DO: Initialise the UDP socket for sending data
 	}
-
+}
 	private void testLoop(InetAddress serverAddr, int recvPort, int countTo) {
-		int				tries = 0;
-
+		for (int tries = 0;tries<countTo;tries++ ) {
+			MessageInfo msg = new MessageInfo(countTo,tries);
+			send(msg.toString(),serverAddr,recvPort);
+		}
 		// TO-DO: Send the messages to the server
+
 	}
 
 	private void send(String payload, InetAddress destAddr, int destPort) {
 		int				payloadSize;
 		byte[]				pktData;
 		DatagramPacket		pkt;
-
+try{
+	pktData=payload.getBytes(StandardCharsets.UTF_8);
+	payloadSize =payload.length();
+	pkt = new DatagramPacket(pktData,payloadSize,destAddr,destPort);
+	sendSoc.send(pkt);
+}catch(IOException e){System.out.println("IO:"+e.getMessage());
 		// TO-DO: build the datagram packet and send it to the server
 	}
+}
 }
