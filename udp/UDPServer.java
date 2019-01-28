@@ -18,16 +18,32 @@ public class UDPServer {
 	private int totalMessages = -1;
 	private int[] receivedMessages;
 	private boolean close;
-
+	private int count=0;
+	private int count_process = 0;
 	private void run() {
 		int				pacSize;
 		byte[]			pacData;
 		DatagramPacket 	pac;
-		recvSoc.receive(pac);
-		pacData = pac.getData();
-		String pacdata_string = new string(pacData,StandardCharsets.UTF_8);
-		pacSize =	pac.getLengh();
-		processMessage(pacdata_string);
+		byte[] buff = new byte[1000];
+		while(!close&&count<3){
+			try{
+				pac = new DatagramPacket(buff,1000);
+				recvSoc.receive(pac);
+				pacData = pac.getData();
+				pacSize =	pac.getLengh();
+				String pacdata_string = new string(pacData,StandardCharsets.UTF_8);
+				processMessage(pacdata_string);
+				count = 0;
+			}catch(Exception e){
+				System.out.println("Exception"+e.getMessage());
+				count++;
+			}
+		}
+
+
+
+
+
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
 
@@ -35,14 +51,24 @@ public class UDPServer {
 
 	public void processMessage(String data) {
 		MessageInfo msg = null;
-		length = data.length();
-		bool endloop = true;
-		int i=0
-		while((endloop)&&(length!=0)){
-			MessageInfo message = new MessageInfo(data[i]);
-			i++;
-			length--;
+		try{
+			msg = new MessageInfo(data);
+			if(totalMessages==-1){
+				totalMessages = msg.totalMessages;
+				receivedMessages = new boolean[totalMessages];
+				count_process = totalMessages;
+			}
+			System.out.printf("  ",msg.messageNum);
+			receivedMessages[msg.messageNum]=true;
+			count_process-=count_process;
+			if (count_process==0) {
+				close = true;
+			}
+		}catch(Exception e){
+			System.err.println("ignore "+e.gerMessage());
 		}
+		}
+
 		// TO-DO: Use the data to construct a new MessageInfo object
 
 		// TO-DO: On receipt of first message, initialise the receive buffer
@@ -74,12 +100,11 @@ public class UDPServer {
 		// Done Initialisation
 		try{
 				recvSoc = new DatagramSocket(rp);
-
-				recvSoc.setSoTimeout(30);
+				recvSoc.setSoTimeout(30000);
 		}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
-		System.out.println("UDPServer ready");
 	}
-
+	System.out.println("UDPServer ready");
+}
 	public static void main(String args[]) {
 		int	recvPort;
 
@@ -102,10 +127,7 @@ public class UDPServer {
 		// TO-DO: If this is the last expected message, then identify
 		}
 		recvPort = Integer.parseInt(args[0]);
-
-
 		UDPServer server = new UDPServer(recvPort);
-
 		server.run();
 		// TO-DO: Construct Server object and start it by calling run().
 	}
