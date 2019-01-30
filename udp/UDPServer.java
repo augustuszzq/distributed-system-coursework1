@@ -30,7 +30,7 @@ public class UDPServer {
 				recvSoc.receive(pac);
 				pacData = pac.getData();
 				pacSize =	pac.getLength();
-				String pacdata_string = new String(pacData,StandardCharsets.UTF_8);
+				String pacdata_string = new String(pacData,,pacSize,StandardCharsets.UTF_8);
 				processMessage(pacdata_string);
 				count = 0;
 			}catch(Exception e){

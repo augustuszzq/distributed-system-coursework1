@@ -16,7 +16,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 
 	private int totalMessages = -1;
 	private int[] receivedMessages;
-
+	private boolean condition;
 	public RMIServer() throws RemoteException {
 	}
 
@@ -35,7 +35,15 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 	public static void main(String[] args) {
 
 		RMIServer rmis = null;
+		if (System.getSecurityManager() == null) {
+				System.setSecurityManager(new SecurityManager());
+		}
+		try{
+			rmis = new RMIServer();
+			rebindServer(args[0],rmis);
+		}catch(){
 
+		}
 		// TO-DO: Initialise Security Manager
 
 		// TO-DO: Instantiate the server class
@@ -45,7 +53,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 	}
 
 	protected static void rebindServer(String serverURL, RMIServer server) {
-
+		while(!condition){}
 		// TO-DO:
 		// Start / find the registry (hint use LocateRegistry.createRegistry(...)
 		// If we *know* the registry is running we could skip this (eg run rmiregistry in the start script)
