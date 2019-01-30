@@ -30,7 +30,8 @@ public class UDPServer {
 				recvSoc.receive(pac);
 				pacData = pac.getData();
 				pacSize =	pac.getLength();
-				String pacdata_string = new String(pacData,,pacSize,StandardCharsets.UTF_8);
+				// System.out.println(pacSize);
+				String pacdata_string = new String(pacData,0,pacSize,StandardCharsets.UTF_8);
 				processMessage(pacdata_string);
 				count = 0;
 			}catch(Exception e){
@@ -51,7 +52,7 @@ public class UDPServer {
 				receivedMessages = new boolean[totalMessages];
 				count_process = totalMessages;
 			}
-			System.out.printf("  ",msg.messageNum);
+			System.out.printf("",msg.messageNum);
 			receivedMessages[msg.messageNum]=true;
 			count_process-=count_process;
 			if (count_process==0) {

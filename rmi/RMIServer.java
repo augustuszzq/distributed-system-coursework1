@@ -17,11 +17,22 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 	private int totalMessages = -1;
 	private int[] receivedMessages;
 	private boolean condition;
+	private int count;
+
 	public RMIServer() throws RemoteException {
 	}
 
 	public void receiveMessage(MessageInfo msg) throws RemoteException {
-
+		if (totalMessages==-1){
+			totalMessages = msg.totalMessages;
+			receivedMessages = new int [1000];
+			count = totalMessages;
+		}
+		System.out.printf("",msg.messageNum);
+		count--;
+		if(count == 0){
+			condition = true;
+		}
 		// TO-DO: On receipt of first message, initialise the receive buffer
 
 		// TO-DO: Log receipt of the message
@@ -41,6 +52,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		try{
 			rmis = new RMIServer();
 			rebindServer(args[0],rmis);
+
 		}catch(){
 
 		}
@@ -57,7 +69,18 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		// TO-DO:
 		// Start / find the registry (hint use LocateRegistry.createRegistry(...)
 		// If we *know* the registry is running we could skip this (eg run rmiregistry in the start script)
+		int i=0;
+		int numMessages = Integer.parseInt(args[1]);
+		Registry registry = new createRegistry(arg[0]);
+		RMIServerI iRMIServer = null;
+		MessageInfo msg = new MessageInfo(numMessages,i);
+		i++;
+		registry.rebind(serverURL,iRMIServer);
+		try{
+			rmis.receiveMessage(msg);
+		}catch(){
 
+		}
 		// TO-DO:
 		// Now rebind the server to the registry (rebind replaces any existing servers bound to the serverURL)
 		// Note - Registry.rebind (as returned by createRegistry / getRegistry) does something similar but

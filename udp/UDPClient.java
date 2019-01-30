@@ -41,7 +41,7 @@ public class UDPClient {
 	}
 
 	public UDPClient() {
-		try{DatagramSocket aSocket = new DatagramSocket();
+		try{sendSoc = new DatagramSocket();
 		}catch(SocketException e){System.out.println("Socket:"+e.getMessage());
 		// TO-DO: Initialise the UDP socket for sending data
 	}
