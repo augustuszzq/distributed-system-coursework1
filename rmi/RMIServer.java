@@ -25,14 +25,12 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 	public void receiveMessage(MessageInfo msg) throws RemoteException {
 		if (totalMessages==-1){
 			totalMessages = msg.totalMessages;
-			receivedMessages = new int [1000];
+
 			count = totalMessages;
 		}
 		System.out.printf("",msg.messageNum);
 		count--;
-		if(count == 0){
-			condition = true;
-		}
+
 		// TO-DO: On receipt of first message, initialise the receive buffer
 
 		// TO-DO: Log receipt of the message
@@ -51,10 +49,11 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		}
 		try{
 			rmis = new RMIServer();
-			rebindServer(args[0],rmis);
+			rebindServer(serverURL,rmis);
+			System.out.println("server bound");
 
-		}catch(){
-
+		}catch(Exception e){
+			System.err.println("creation exception:"+e);
 		}
 		// TO-DO: Initialise Security Manager
 
@@ -65,22 +64,12 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 	}
 
 	protected static void rebindServer(String serverURL, RMIServer server) {
-		while(!condition){}
+
 		// TO-DO:
 		// Start / find the registry (hint use LocateRegistry.createRegistry(...)
 		// If we *know* the registry is running we could skip this (eg run rmiregistry in the start script)
-		int i=0;
-		int numMessages = Integer.parseInt(args[1]);
-		Registry registry = new createRegistry(arg[0]);
-		RMIServerI iRMIServer = null;
-		MessageInfo msg = new MessageInfo(numMessages,i);
-		i++;
-		registry.rebind(serverURL,iRMIServer);
-		try{
-			rmis.receiveMessage(msg);
-		}catch(){
-
-		}
+		Registry registry = LocateRegistry.createRegistry(registry_port);
+		registry.bind(serverURL,server);
 		// TO-DO:
 		// Now rebind the server to the registry (rebind replaces any existing servers bound to the serverURL)
 		// Note - Registry.rebind (as returned by createRegistry / getRegistry) does something similar but
