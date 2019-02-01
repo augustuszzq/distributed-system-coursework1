@@ -16,7 +16,7 @@ public class UDPServer {
 	private DatagramSocket recvSoc;
 	private int totalMessages = -1;
 	private boolean[] receivedMessages;
-	private boolean close;
+	private boolean close=false;
 	private int count=0;
 	private int count_process = 0;
 	private void run() {
@@ -24,7 +24,7 @@ public class UDPServer {
 		byte[]			pacData;
 		DatagramPacket 	pac;
 		byte[] buff = new byte[1000];
-		while(!close&&count<3){
+		while(!close){
 			try{
 				pac = new DatagramPacket(buff,1000);
 				recvSoc.receive(pac);
@@ -32,8 +32,9 @@ public class UDPServer {
 				pacSize =	pac.getLength();
 				// System.out.println(pacSize);
 				String pacdata_string = new String(pacData,0,pacSize,StandardCharsets.UTF_8);
+				System.out.println("xxx");
 				processMessage(pacdata_string);
-				count = 0;
+
 			}catch(Exception e){
 				System.out.println("Exception"+e.getMessage());
 				count++;
@@ -52,9 +53,9 @@ public class UDPServer {
 				receivedMessages = new boolean[totalMessages];
 				count_process = totalMessages;
 			}
-			System.out.printf("",msg.messageNum);
+			System.out.printf("%d",msg.messageNum);
 			receivedMessages[msg.messageNum]=true;
-			count_process-=count_process;
+			count_process--;
 			if (count_process==0) {
 				close = true;
 			}
