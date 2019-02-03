@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 
@@ -18,8 +19,11 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 	private int[] receivedMessages;
 	private boolean condition;
 	private int count;
+	private static final int registry_port=1099; // denote which name server to use
+	private static final String serverURL = new String("Dominic");
 
 	public RMIServer() throws RemoteException {
+		super();
 	}
 
 	public void receiveMessage(MessageInfo msg) throws RemoteException {
@@ -28,7 +32,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 
 			count = totalMessages;
 		}
-		System.out.printf("",msg.messageNum);
+		System.out.printf("%d",msg.messageNum);
 		count--;
 
 		// TO-DO: On receipt of first message, initialise the receive buffer
@@ -50,10 +54,10 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		try{
 			rmis = new RMIServer();
 			rebindServer(serverURL,rmis);
-			System.out.println("server bound");
+			System.out.println("Server ready");
 
 		}catch(Exception e){
-			System.err.println("creation exception:"+e);
+			System.err.println("Exception:"+e);
 		}
 		// TO-DO: Initialise Security Manager
 
@@ -63,7 +67,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 
 	}
 
-	protected static void rebindServer(String serverURL, RMIServer server) {
+	protected static void rebindServer(String serverURL, RMIServer server) throws Exception {
 
 		// TO-DO:
 		// Start / find the registry (hint use LocateRegistry.createRegistry(...)

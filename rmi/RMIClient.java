@@ -12,10 +12,12 @@ import java.rmi.server.UnicastRemoteObject;
 import common.MessageInfo;
 
 public class RMIClient {
+	private static final int registryport=1099;// create unique name server for pairing
+	private static final String urlServer = new String("Dominic");
 
 	public static void main(String[] args) {
 
-		RMIServerI iRMIServer = null;
+		RMIServerI ServerObject = null;
 
 		// Check arguments for Server host and number of messages
 		if (args.length < 2){
@@ -23,7 +25,7 @@ public class RMIClient {
 			System.exit(-1);
 		}
 
-		String urlServer = new String("rmi://" + args[0] + "/RMIServer");
+
 		int numMessages = Integer.parseInt(args[1]);
 
 		// TO-DO: Initialise Security Manager
@@ -32,11 +34,11 @@ public class RMIClient {
 		}
 		// TO-DO: Bind to RMIServer
 		try{
-			Registry registry = LocateRegistry.getRegistry(args[0]);
-			iRMIServer = (RMIServerI) registry.lookup(urlServer);
+			Registry registry = LocateRegistry.getRegistry(args[0],registryport);
+			ServerObject = (RMIServerI) registry.lookup(urlServer);
 			for (int i=0;i<numMessages ; i++) {
 				MessageInfo msg = new MessageInfo(numMessages,i);
-				iRMIServer.receiveMessage(msg);
+				ServerObject.receiveMessage(msg);
 			}
 			System.out.println(" ");
 		}catch(Exception e){

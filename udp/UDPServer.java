@@ -15,7 +15,8 @@ import common.MessageInfo;
 public class UDPServer {
 	private DatagramSocket recvSoc;
 	private int totalMessages = -1;
-	private boolean[] receivedMessages;
+	//private boolean[] receivedMessages;
+	private int[] checklist;
 	private boolean close=false;
 	private int count=0;
 	private int count_process = 0;
@@ -23,16 +24,16 @@ public class UDPServer {
 		int				pacSize;
 		byte[]			pacData;
 		DatagramPacket 	pac;
-		byte[] buff = new byte[1000];
+		byte[] buff = new byte[2222];
 		while(!close){
 			try{
-				pac = new DatagramPacket(buff,1000);
+				pac = new DatagramPacket(buff,2222);
 				recvSoc.receive(pac);
 				pacData = pac.getData();
 				pacSize =	pac.getLength();
 				// System.out.println(pacSize);
 				String pacdata_string = new String(pacData,0,pacSize,StandardCharsets.UTF_8);
-				System.out.println("xxx");
+				//System.out.println("xxx");
 				processMessage(pacdata_string);
 
 			}catch(Exception e){
@@ -50,11 +51,16 @@ public class UDPServer {
 			msg = new MessageInfo(data);
 			if(totalMessages==-1){
 				totalMessages = msg.totalMessages;
-				receivedMessages = new boolean[totalMessages];
+				checklist = new int[totalMessages];
+
+				//receivedMessages = new boolean[totalMessages];
 				count_process = totalMessages;
 			}
 			System.out.printf("%d",msg.messageNum);
-			receivedMessages[msg.messageNum]=true;
+			System.out.printf("\n");
+			//receivedMessages[msg.messageNum]=true;
+			checklist[msg.messageNum]=1; //set to 1 if transmitted, for checking later
+
 			count_process--;
 			if (count_process==0) {
 				close = true;
@@ -91,6 +97,7 @@ public class UDPServer {
 		recvPort = Integer.parseInt(args[0]);
 		UDPServer server = new UDPServer(recvPort);
 		server.run();
+
 		// TO-DO: Construct Server object and start it by calling run().
 	}
 
